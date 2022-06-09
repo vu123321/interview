@@ -1,0 +1,10 @@
+git init 
+git remote -v
+git remote add origin add "url"
+
+--	push code branch.
+-- 	create commit.
+
+git push origin HEAD:"name branch" 
+-- note check tokken expire
+

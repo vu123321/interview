@@ -18,7 +18,7 @@ public class _2140_SolvingQuestionWithBrainpower {
 
         System.out.println("----------------------");
 
-        Integer x = new Integer(100);
+        Integer x = 100;
         Integer y = 100;
 
         System.out.println(System.identityHashCode("x" + x));

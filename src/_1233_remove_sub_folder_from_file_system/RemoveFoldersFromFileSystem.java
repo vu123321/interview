@@ -13,6 +13,44 @@ public class RemoveFoldersFromFileSystem {
 
     }
 
+    private static int numWaterBottles(int numBottles, int numExchange) {
+
+        int emptyBottles = numBottles;
+
+        int totalDrunk = numBottles;
+
+
+        while (emptyBottles >= numExchange) {
+
+            int newFullBottles = emptyBottles / numExchange;
+            totalDrunk += newFullBottles;
+            emptyBottles = newFullBottles + (emptyBottles % numExchange);
+        }
+
+        System.out.println(totalDrunk);
+
+//        int numBottles = 15;
+//        int numExchange = 4;
+//
+//        int totalDrunk = numBottles; // Số chai đã uống
+//        int emptyBottles = numBottles; // Số chai rỗng ban đầu
+
+// Vòng lặp để đổi chai
+//        while (emptyBottles >= numExchange) {
+//            // Tính số chai nước mới nhận được
+//            int newFullBottles = emptyBottles / numExchange;
+//            totalDrunk += newFullBottles; // Cập nhật số chai đã uống
+//            emptyBottles = newFullBottles + (emptyBottles % numExchange); // Tính số chai rỗng còn lại
+//        }
+
+//        System.out.println(totalDrunk);
+//
+//        System.out.println(numBottles);
+
+        return totalDrunk;
+
+    }
+
     public static List<String> removeSubfolders(String[] folders) {
 //        Arrays.sort(folders);
 ////        List<String> result = new ArrayList<>();

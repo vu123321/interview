@@ -1,0 +1,79 @@
+package _474_ones_zeroes;
+
+import java.util.Random;
+
+public class OnesAndZeroes {
+
+    private static int findMaxForm(String[] strs, int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+        
+        for (String str : strs) {
+            int count0 = 0, count1 = 0;
+            for (char c : str.toCharArray()) {
+                if (c == '0') count0++;
+                else count1++;
+            }
+
+            /// update arr DP from under to void overwrite
+
+            for (int i = m; i > count0; i--) {
+                for (int j = n; j > count1; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - count0][j - count1] + 1);
+                }
+            }
+        }
+
+        return dp.length;
+
+    }
+
+
+    public static void main(String[] args) {
+        String[] strs = {"10", "0001", "111001", "1", "0"};
+        int m = 5; // số lượng tối đa của 0
+        int n = 3; // số lượng tối đa của 1
+
+        int result = findMaxFormS(strs, m, n);
+        System.out.println("Kích thước của tập con lớn nhất: " + result);
+        Random random = new Random();
+//
+//        int[][] dp = new int[11][11];
+//        for (int i = 0; i <= 10; i++) {
+//            for (int j = i + 1; j <= 10;j++){
+//                dp[i][j] = random.nextInt(1, 111 );
+//            }
+//        }
+//
+//        for (int i = 0; i < dp.length; i++) {
+//            for (int j = 0; j < dp[i].length;j++){
+//                System.out.println("dp= [ "+i+" ]"+"[ "+j+" ]"+" = "+dp[i][j]);
+//            }
+//        }
+    }
+
+    public static int findMaxFormS(String[] strs, int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+
+        // String[] strs = {"10", "0001", "111001", "1", "0"};
+
+        for (String str : strs) {
+            int count0 = 0, count1 = 0;
+
+            // count number 0 and 1
+            for (char c : str.toCharArray()) {
+                if (c == '0') count0++;
+                else count1++;
+            }
+
+            for (int i = m; i >= count0; i--) {
+                for (int j = n; j >= count1; j--) {
+//                    System.out.println("i= "+i+" , j= "+j);
+                    dp[i][j] = Math.max(dp[i][j], dp[i - count0][j - count1] + 1);
+                    System.out.println("dp= [ "+i+" ]"+"[ "+j+" ]"+" = "+dp[i][j]);
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+}

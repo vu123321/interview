@@ -1,0 +1,73 @@
+package thread;
+
+
+import java.util.List;
+import java.util.concurrent.StructuredTaskScope;
+
+
+public class CustomerProfileStructuredConcurrencyExample {
+
+    public static void main(String[] args) throws Exception {
+        CustomerProfile profile = loadCustomerProfile(1001);
+
+        System.out.println(profile);
+    }
+
+    static CustomerProfile loadCustomerProfile(int customerId) throws Exception {
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+            StructuredTaskScope.Subtask<Customer> customerTask =
+                    scope.fork(() -> getCustomer(customerId));
+
+            StructuredTaskScope.Subtask<List<Account>> accountsTask =
+                    scope.fork(() -> getAccounts(customerId));
+
+            StructuredTaskScope.Subtask<CreditScore> scoreTask =
+                    scope.fork(() -> getCreditScore(customerId));
+
+            scope.join();
+            scope.throwIfFailed();
+
+            return new CustomerProfile(
+                    customerTask.get(),
+                    accountsTask.get(),
+                    scoreTask.get()
+            );
+        }
+    }
+
+    static Customer getCustomer(int customerId) {
+        sleep(1000);
+        return new Customer(customerId, "Alex");
+    }
+
+    static List<Account> getAccounts(int customerId) {
+        sleep(1000);
+        return List.of(new Account("001", customerId, 10_000_000));
+    }
+
+    static CreditScore getCreditScore(int customerId) {
+        sleep(1000);
+        return new CreditScore(customerId, 750);
+    }
+
+    static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(exception);
+        }
+    }
+}
+
+record Customer(int id, String name) {
+}
+
+record Account(String accountNo, int customerId, long balance) {
+}
+
+record CreditScore(int customerId, int score) {
+}
+
+record CustomerProfile(Customer customer, List<Account> accounts, CreditScore creditScore) {
+}

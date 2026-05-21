@@ -1,0 +1,62 @@
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+public class UserOrderCompletableFutureExample {
+
+    public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+
+        CompletableFuture<User> userFuture =
+                CompletableFuture.supplyAsync(() -> getUserFromRemoteService(1));
+
+        CompletableFuture<List<Order>> ordersFuture =
+                CompletableFuture.supplyAsync(() -> getOrdersFromRemoteService(1));
+
+        User user = userFuture.join();
+        List<Order> orders = ordersFuture.join();
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("user = " + user);
+        System.out.println("orders = " + orders);
+        System.out.println("total time = " + (endTime - startTime) + " ms");
+    }
+
+    static User getUserFromRemoteService(int userId) {
+        System.out.println("Start get user, thread = " + Thread.currentThread().getName());
+
+        sleep(2000);
+
+        System.out.println("End get user");
+
+        return new User(userId, "Alex");
+    }
+
+    static List<Order> getOrdersFromRemoteService(int userId) {
+        System.out.println("Start get orders, thread = " + Thread.currentThread().getName());
+
+        sleep(2000);
+
+        System.out.println("End get orders");
+
+        return List.of(
+                new Order(101, userId, "Book"),
+                new Order(102, userId, "Mouse")
+        );
+    }
+
+    static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(exception);
+        }
+    }
+}
+
+record User(int id, String name) {
+}
+
+record Order(int id, int userId, String item) {
+}

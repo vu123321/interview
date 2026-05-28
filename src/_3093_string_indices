@@ -1,0 +1,55 @@
+package _3093_string_Indices;
+
+public class Solution {
+
+    public static void main(String[] args) {
+
+    }
+
+
+    public static int[] stringIndices(String[] wordsContainer, String[] wordsQuery) {
+
+        int queryLength = wordsQuery.length;
+        int containerLength = wordsContainer.length;
+
+
+        int[] ans = new int[wordsQuery.length];
+
+        for (int q = 0; q < queryLength; q++) {
+            String queryWord = wordsQuery[q];
+            int bestIndex = 0;
+            int maxSuffixLen = -1;
+            int minWordLen = Integer.MAX_VALUE;
+
+            for (int c = 0; c < containerLength; c++) {
+                String containerWord = wordsContainer[c];
+                int suffixLen = getMatchingSuffixLength(queryWord, containerWord);
+                int wordLen = containerWord.length();
+
+                // Ưu tiên 1: Phần đuôi dài hơn
+                // Ưu tiên 2: Phần đuôi bằng nhau thì chọn từ ngắn hơn
+                if (suffixLen > maxSuffixLen || (suffixLen == maxSuffixLen && wordLen < minWordLen)) {
+                    bestIndex = c;
+                    maxSuffixLen = suffixLen;
+                    minWordLen = wordLen;
+                }
+            }
+            ans[q] = bestIndex;
+        }
+        return ans;
+    }
+
+    // Hàm phụ dùng để đếm độ dài phần đuôi giống nhau
+    public static int getMatchingSuffixLength(String s1, String s2) {
+        int count = 0;
+        int i = s1.length() - 1;
+        int j = s2.length() - 1;
+
+        while (i >= 0 && j >= 0 && s1.charAt(i) == s2.charAt(j)) {
+            count++;
+            i--;
+            j--;
+        }
+        return count;
+    }
+}
